@@ -34,12 +34,11 @@ struct record *readrecord();
 
 int main()
 {
-int option,value;
+int option,value,login=0;
 
 double b;
 char c[N],a[M];
-char s1[15],s2[15],s3[15];
-
+char s1[15],s2[15],s3[15],s4[30],userName[40],password[60];
 
 
 if(fopen("Record.bin","rb")!=NULL)
@@ -57,14 +56,19 @@ if(fopen("myexpense.bin","rb")!=NULL)
 {
 expense=readexpense(expense);
 }
+  printf("Login with your credential \n");
+  printf("Enter your user name: \n");
+  scanf("%s",userName);
+  printf("Enter your password: \n");
+  scanf("%s",password);
+  printf("%s %s",userName,password);
 
-
-do{
-
+   do{
 printf("                                           _______________________________________________\n  " );
-printf("                                         |     YOUR INCOME   =      %.2lf BDT      \n ",currentincome);
-printf("                                          |     YOUR EXPENSE  =      %.2lf BDT     \n ",currentexpense);
-printf("                                          |     YOUR BALANCE  =      %.2lf BDT     \n ",currentincome-currentexpense);
+printf("                                          |    User Account Name =      %s      \n ",userName);
+printf("                                          |    YOUR INCOME       =      %.2lf BDT      \n ",currentincome);
+printf("                                          |    YOUR EXPENSE      =      %.2lf BDT     \n ",currentexpense);
+printf("                                          |    YOUR BALANCE      =      %.2lf BDT     \n ",currentincome-currentexpense);
 printf("                                          |_______________________________________________\n");
 printf("ENTER THE OPTION FROM THE BELOW \n\n");
 printf("1.INSERT INCOME \n");
@@ -93,8 +97,6 @@ printf("Enter the Category\n");
 scanf("%s",c);
 
 
-
-
 currentincome=currentincome+b;
 create(a,b,c,&income);
 writeincome(income);
@@ -116,8 +118,6 @@ printf("Enter The Amount\n");
 scanf("%lf",&b);
 printf("Enter The Category\n");
 scanf("%s",c);
-
-
 currentexpense=currentexpense+b;
 create(a,b,c,&expense);
 writeexpense(expense);
@@ -143,17 +143,11 @@ break;
 }
 }while(option!=5);
 
-
 return 0;
 }
 
 
-
-
-
-
-
-void create(char x[],double y,char z[],struct node **temp)        /* it isokay to write *temp if we pass only income rather than &income*/
+void create(char x[],double y,char z[],struct node **temp)
 {
 struct node *newnode,*ptr;
 newnode=(struct node*)malloc(sizeof(struct node));
@@ -193,10 +187,6 @@ freeme=holdme;
 }
 
 
-
-
-
-
 struct node *readnext(struct node *ptr,FILE *fpointer)
 {
 
@@ -220,9 +210,6 @@ ptr2->next=NULL;
 }
 return ptr;
 }
-
-
-
 
 
 struct node *readincome(struct node *ptr)
@@ -252,19 +239,12 @@ return ptr;
 
 
 
-
-
-
-
-
 void display(int a3)
 {
-   if(a3==3)//if case 3 is executed,we have to print income record
+   if(a3==3)
     {
 
-                 if(fopen("myincome.bin","rb")==NULL)/*if user try to view record when there is no any record,i.e when user runs program
-                                                       first time and wants to view record i.e there is no any
-                                                        file created yet as myincome.bin,then it will =NULL */
+                 if(fopen("myincome.bin","rb")==NULL)
 
                          {
                              printf("NO RECORDS AVAILABLE\n\n");
@@ -273,7 +253,6 @@ void display(int a3)
                         }
                 else
               {
-                   //income=readincome(income);
                      struct node *ptr2=income;
                     while(ptr2!=NULL)
                         {
@@ -285,12 +264,10 @@ void display(int a3)
 
                }
 }
-else if(a3==4)//if case 4 is executed then we have to print expenese record
+else if(a3==4)
    {
 
-                 if(fopen("myexpense.bin","rb")==NULL)/*if user try to view record when there is no any record,i.e when user runs program
-                                                       first time and wants to view record i.e there is no any
-                                                        file created yet as myexpense.bin,then it will =NULL */
+                 if(fopen("myexpense.bin","rb")==NULL)
 
                           {
                              printf("NO RECORDS AVAILABLE\n\n");
@@ -299,7 +276,6 @@ else if(a3==4)//if case 4 is executed then we have to print expenese record
                 else
                       {
 
-                        //   expense=readexpense(expense);
                            struct node *ptr2=expense;
                                     while(ptr2!=NULL)
                                     {
@@ -317,12 +293,6 @@ else if(a3==4)//if case 4 is executed then we have to print expenese record
 }
 
 
-
-
-
-
-
-
 void writeincome(struct node *ptr)
 {
 FILE *fpointer;
@@ -336,7 +306,7 @@ while(ptr1!=NULL)
 holdnext=ptr1->next;
 ptr1->next=NULL;
 fseek(fpointer,0,SEEK_END);
-fwrite(ptr1,sizeof(struct node),1,fpointer);/*everytime we write into file,it will overwrite the data......                                                      whole data will be deleted and new data willl be written intofile*/
+fwrite(ptr1,sizeof(struct node),1,fpointer);
 ptr1->next=holdnext;
 holdnext=NULL;
 ptr1=ptr1->next;
@@ -355,9 +325,6 @@ printf("\nCANNOT SAVE INCOME..TRY AGAIN\n");
 }
 
 
-
-
-
 void writeexpense(struct node *ptr)
 {
 FILE *fpointer;
@@ -371,8 +338,7 @@ while(ptr1!=NULL)
 holdnext=ptr1->next;
 ptr1->next=NULL;
 fseek(fpointer,0,SEEK_END);
-fwrite(ptr1,sizeof(struct node),1,fpointer);/*everytime we write into file,it will overwrite the data.....
-                                                     whole data will be deleted and new data willl be written intofile*/
+fwrite(ptr1,sizeof(struct node),1,fpointer);
 ptr1->next=holdnext;
 holdnext=NULL;
 ptr1=ptr1->next;
@@ -389,17 +355,6 @@ printf("\nCANNOT SAVE EXPENSE..TRY AGAIN\n\n");
 
 }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 struct node *readexpense(struct node *ptr)
 {
@@ -421,24 +376,11 @@ ptr=readnext(ptr,fpointer);
 }
 else
 {
-printf("cannonot open file\n");
+printf("can't open file\n");
 
 }
 return ptr;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void write(struct record *point)
@@ -458,11 +400,6 @@ fclose(fpointer);
 fpointer=NULL;
 
 }
-
-
-
-
-
 
 struct record *readrecord()
 {
